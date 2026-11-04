@@ -1,6 +1,6 @@
 <h1>ExpNo 5 : Implement Minimax Search Algorithm for a Simple TIC-TAC-TOE game</h1> 
-<h3>Name:           </h3>
-<h3>Register Number/Staff Id:          </h3>
+<h3>Name:  Shyam R       </h3>
+<h3>Register Number:     212223040200    </h3>
 <H3>Aim:</H3>
 <p>
     Implement Minimax Search Algorithm for a Simple TIC-TAC-TOE game
@@ -112,5 +112,181 @@ end
 ![image](https://github.com/natsaravanan/19AI405FUNDAMENTALSOFARTIFICIALINTELLIGENCE/assets/87870499/a2acb6a1-ed8e-42e5-8968-fe805e4b0255)
 
 <hr>
+
+
+<h2>Program : <h2>
+
+```
+
+class Game:
+    def __init__(self):
+        self.current_state = [
+            ['.', '.', '.'],
+            ['.', '.', '.'],
+            ['.', '.', '.']
+        ]
+        self.player_turn = 'X'
+
+    # Display the game board
+    def draw_board(self):
+        print("\nCurrent Board:")
+        for row in self.current_state:
+            print(" | ".join(row))
+            print("---------")
+
+    # Check whether a position is valid
+    def is_valid(self, row, col):
+        return (
+            0 <= row < 3 and
+            0 <= col < 3 and
+            self.current_state[row][col] == '.'
+        )
+
+    # Check game result
+    def is_end(self):
+        board = self.current_state
+
+        # Check rows
+        for row in board:
+            if row[0] != '.' and row[0] == row[1] == row[2]:
+                return row[0]
+
+        # Check columns
+        for col in range(3):
+            if (board[0][col] != '.' and
+                board[0][col] == board[1][col] == board[2][col]):
+                return board[0][col]
+
+        # Check diagonals
+        if board[0][0] != '.' and board[0][0] == board[1][1] == board[2][2]:
+            return board[0][0]
+
+        if board[0][2] != '.' and board[0][2] == board[1][1] == board[2][0]:
+            return board[0][2]
+
+        # Check draw
+        for row in board:
+            if '.' in row:
+                return None
+
+        return 'Draw'
+
+    # Minimax function for AI (O)
+    def max(self):
+        result = self.is_end()
+
+        if result == 'X':
+            return (-1, None, None)
+        elif result == 'O':
+            return (1, None, None)
+        elif result == 'Draw':
+            return (0, None, None)
+
+        best_score = -float('inf')
+        best_move = (None, None)
+
+        for i in range(3):
+            for j in range(3):
+                if self.current_state[i][j] == '.':
+                    self.current_state[i][j] = 'O'
+
+                    score, _, _ = self.min()
+
+                    self.current_state[i][j] = '.'
+
+                    if score > best_score:
+                        best_score = score
+                        best_move = (i, j)
+
+        return (best_score, best_move[0], best_move[1])
+
+    # Minimax function for human player (X)
+    def min(self):
+        result = self.is_end()
+
+        if result == 'X':
+            return (-1, None, None)
+        elif result == 'O':
+            return (1, None, None)
+        elif result == 'Draw':
+            return (0, None, None)
+
+        best_score = float('inf')
+        best_move = (None, None)
+
+        for i in range(3):
+            for j in range(3):
+                if self.current_state[i][j] == '.':
+                    self.current_state[i][j] = 'X'
+
+                    score, _, _ = self.max()
+
+                    self.current_state[i][j] = '.'
+
+                    if score < best_score:
+                        best_score = score
+                        best_move = (i, j)
+
+        return (best_score, best_move[0], best_move[1])
+
+    # Start the game
+    def play(self):
+        print("TIC TAC TOE - MINIMAX ALGORITHM")
+        print("You are X and Computer is O")
+
+        while True:
+            self.draw_board()
+
+            result = self.is_end()
+
+            if result is not None:
+                if result == 'Draw':
+                    print("Game Draw!")
+                else:
+                    print(result, "Wins!")
+                break
+
+            if self.player_turn == 'X':
+                print("Your Turn (X)")
+
+                try:
+                    row = int(input("Enter row (0-2): "))
+                    col = int(input("Enter column (0-2): "))
+                except ValueError:
+                    print("Please enter valid numbers.")
+                    continue
+
+                if self.is_valid(row, col):
+                    self.current_state[row][col] = 'X'
+                    self.player_turn = 'O'
+                else:
+                    print("Invalid move! Try again.")
+
+            else:
+                print("Computer's Turn (O)")
+
+                score, row, col = self.max()
+
+                if row is not None:
+                    self.current_state[row][col] = 'O'
+
+                self.player_turn = 'X'
+
+
+# Main program
+if __name__ == "__main__":
+    game = Game()
+    game.play()
+
+```
+
+<h2> Output : <h2>
+
+<img width="1337" height="416" alt="image" src="https://github.com/user-attachments/assets/749beeee-8340-4d5e-a30c-06547ec5ccc4" />
+
+
+<img width="1342" height="407" alt="image" src="https://github.com/user-attachments/assets/9394fc4b-2da2-44d9-ae86-ae4a75d65f44" />
+
+
 <h2>Result:</h2>
 <p>Thus,Implementation of  Minimax Search Algorithm for a Simple TIC-TAC-TOE game wasa done successfully.</p>
